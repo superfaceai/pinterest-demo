@@ -41,8 +41,8 @@ async function getRefreshedTokens() {
     .getUseCase('GetAccessTokenFromRefreshToken')
     .perform({
       refreshToken: tokens.refreshToken,
-      clientId: process.env.TWITTER_CLIENT_ID,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      clientId: process.env.PINTEREST_APP_ID,
+      clientSecret: process.env.PINTEREST_APP_SECRET,
     });
 
   const data = result.unwrap();

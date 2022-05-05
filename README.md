@@ -12,7 +12,9 @@
 You need to obtain Pinterest application ID and secret. We recommend to try the demo with a dedicated testing Pinterest business account.
 
 - request a trial account according to [Pinterest documentation](https://developers.pinterest.com/docs/api/v5/#section/Requesting-Trial-Access)
-- once your request is approved (mind that you may not get any notification), copy "App id" and "App secret key" into the `.env` file
+- once your request is approved (mind that you may not get any notification), visit Manage section of your app in [My apps](https://developers.pinterest.com/apps/)
+- add the following Redirect URI: `http://localhost:3000/auth/pinterest/callback`
+- copy "App id" and "App secret key" into the `.env` file
 
 ### Obtaining Access and Refresh tokens
 
