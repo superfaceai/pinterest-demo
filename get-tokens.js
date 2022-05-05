@@ -1,16 +1,10 @@
 const util = require('util');
 const express = require('express');
 const passport = require('passport');
-const TwitterStrategy = require('@superfaceai/passport-twitter-oauth2');
+const PinterestStrategy = require('passport-pinterest-v3').Strategy;
 const session = require('express-session');
 
-const SCOPES = [
-  'tweet.read',
-  'tweet.write',
-  'users.read',
-  'follows.read',
-  'offline.access',
-];
+const SCOPES = ['boards:read', 'pins:write'];
 
 const EXIT_ON_SUCCESS = true;
 
@@ -36,20 +30,20 @@ function onAuthSuccess({ accessToken, refreshToken }) {
   }
 }
 
-//Use the Twitter OAuth2 strategy within Passport.
 passport.use(
-  new TwitterStrategy(
+  new PinterestStrategy(
     {
-      clientID: process.env.TWITTER_CLIENT_ID,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET,
-      callbackURL: `${process.env.BASE_URL}/auth/twitter/callback`,
-      clientType: 'private',
+      scope: SCOPES,
+      tokenURL: 'https://api.pinterest.com/v5/oauth/token',
+      clientID: process.env.PINTEREST_APP_ID,
+      clientSecret: process.env.PINTEREST_APP_SECRET,
+      callbackURL: `${process.env.BASE_URL}/auth/pinterest/callback`,
+      skipUserProfile: true, // userProfile doesn't work with this strategy
+      state: true,
     },
     (accessToken, refreshToken, profile, done) => {
       onAuthSuccess({ accessToken, refreshToken });
-      return done(null, {
-        displayName: profile.displayName,
-      });
+      return done(null, {});
     }
   )
 );
@@ -62,19 +56,14 @@ app.use(
 );
 
 app.get('/', function (req, res) {
-  res.redirect('/auth/twitter');
+  res.redirect('/auth/pinterest');
 });
 
-app.get(
-  '/auth/twitter',
-  passport.authenticate('twitter', {
-    scope: SCOPES,
-  })
-);
+app.get('/auth/pinterest', passport.authenticate('pinterest'));
 
 app.get(
-  '/auth/twitter/callback',
-  passport.authenticate('twitter', {
+  '/auth/pinterest/callback',
+  passport.authenticate('pinterest', {
     failureRedirect: '/error?login',
     failureMessage: true,
   }),
