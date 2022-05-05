@@ -1,0 +1,118 @@
+profile = "social-media/publish-post@1.1"
+provider = "pinterest"
+
+// https://developers.pinterest.com/docs/api/v5/#operation/pins/create
+map PublishPost {
+  return map error if (!Array.isArray(input.media) || input.media.length !== 1) {
+    title = "Missing image attachment"
+    detail = "You must provide exactly one media item for Pinterest."
+  }
+
+//   {
+//   "link": "https://www.pinterest.com/",
+//   "title": "string",
+//   "description": "string",
+//   "alt_text": "string",
+//   "board_id": "string",
+//   "board_section_id": "string",
+//   "media_source": {
+//     "source_type": "image_base64",
+//     "content_type": "image/jpeg",
+//     "data": "string"
+//   }
+// }
+
+  set {
+    media = input.media[0]
+    imageData = undefined
+    imageUrl = undefined
+    contentType = undefined
+  }
+
+  set if (media.contents) {
+    sourceType = 'image_base64'
+    imageData = Buffer.isBuffer(media.contents) ? media.contents.toString('base64') : media.contents
+    // https://stackoverflow.com/a/69570564 :wow:
+    // FIXME: This just blindly assumes that what's not JPG is PNG
+    contentType = imageData.startsWith('/9j') ? 'image/jpeg' : 'image/png'
+  }
+  set if (media.url) {
+    sourceType = 'image_url'
+    imageUrl = media.url
+  }
+
+  http POST "/v5/pins" {
+
+    request {
+      headers {
+        authorization = "Bearer " + parameters.accessToken
+      }
+      body {
+        board_id = input.profileId,
+        link = input.link,
+        description = input.text,
+        alt_text = media.altText,
+        media_source = {
+          source_type: sourceType,
+          url: imageUrl,
+          data: imageData,
+        }
+      }
+    }
+
+    response 201 "application/json" {
+      map result {
+        postId =  body.id,
+        url = body.link,
+      }
+    }
+
+    response 400 "application/json" {
+      map error {
+        title = "Bad request",
+        detail = body.message,
+        original = body,
+      }
+    }
+
+    response 401 "application/json" {
+      map error {
+        title = "Unauthenticated"
+        detail = body.message
+        original = body
+      }
+    }
+
+    response 403 "application/json" {
+      map error {
+        title = "Forbidden"
+        detail = body.message
+        original = body
+      }
+    }
+
+    response 404 "application/json" {
+      map error {
+        title = "Forbidden"
+        detail = body.message
+        original = body
+      }
+    }
+
+    response 429 "application/json" {
+      map error {
+        title = "Too Many Requests"
+        detail = body.message
+        original = body
+      }
+    }
+
+    response {
+      map error {
+        title = "Unexpected error"
+        detail = body.message
+        original = body
+      }
+    }
+  }
+}

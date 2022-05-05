@@ -9,19 +9,20 @@
       }
     },
     "social-media/publish-post": {
-      "version": "1.0.0"
+      "version": "1.1.0",
+      "providers": {
+        "pinterest": {
+          "file": "../social-media/publish-post.pinterest.suma"
+        }
+      }
     },
     "oauth2/refresh-token": {
       "version": "1.0.0",
       "providers": {
-        "twitter": {},
         "pinterest": {
           "file": "../oauth2/refresh-token.pinterest.suma"
         }
-      },
-      "priority": [
-        "pinterest"
-      ]
+      }
     }
   },
   "providers": {
