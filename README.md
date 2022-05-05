@@ -1,4 +1,4 @@
-# twitter-demo
+# Pinterest Demo
 
 ## Setup
 
