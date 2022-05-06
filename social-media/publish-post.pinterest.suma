@@ -24,7 +24,7 @@ map PublishPost {
 
   set {
     media = input.media[0]
-    mediaSource = undefined
+    mediaSource = {}
   }
 
   set if (media.contents) {
