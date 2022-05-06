@@ -48,8 +48,7 @@ async function getRefreshedTokens() {
   const data = result.unwrap();
   const expiresAt = Date.now() + data.expiresIn * 1000;
 
-  // Pinterest doesn't return a refresh token
-  return { refreshToken: tokens.refreshToken, ...data, expiresAt };
+  return { ...data, expiresAt };
 }
 
 async function refreshToken() {
@@ -65,10 +64,15 @@ async function refreshToken() {
 async function withAccessToken(perform) {
   const tokens = await getTokens();
   try {
-    return await perform(tokens.accessToken);
+    const result = await perform(tokens.accessToken);
+    if (result.isErr()) {
+      result.unwrap();
+    } else {
+      return result;
+    }
   } catch (err) {
     console.error('Error, refreshing token', err);
-    const { accessToken } = refreshToken();
+    const { accessToken } = await refreshToken();
     return await perform(accessToken);
   }
 }

@@ -24,11 +24,11 @@ map GetAccessTokenFromRefreshToken {
 
     response 200 "application/json" {
       return map result {
-        accessToken = body.access_token
-        refreshToken = body.refresh_token
-        expiresIn = body.expires_in
-        tokenType = body.token_type
-        scopes = body.scope.split(',')
+        accessToken = body.access_token,
+        refreshToken = body.refresh_token || input.refreshToken,
+        expiresIn = body.expires_in,
+        tokenType = body.token_type,
+        scopes = body.scope.split(','),
       }
     }
 
