@@ -28,7 +28,7 @@ map GetAccessTokenFromRefreshToken {
         refreshToken = body.refresh_token || input.refreshToken,
         expiresIn = body.expires_in,
         tokenType = body.token_type,
-        scopes = body.scope.split(','),
+        scopes = body.scope.split(' '),
       }
     }
 
