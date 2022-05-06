@@ -48,7 +48,8 @@ async function getRefreshedTokens() {
   const data = result.unwrap();
   const expiresAt = Date.now() + data.expiresIn * 1000;
 
-  return { ...data, expiresAt };
+  // Pinterest doesn't return a refresh token
+  return { refreshToken: tokens.refreshToken, ...data, expiresAt };
 }
 
 async function refreshToken() {
