@@ -4,7 +4,7 @@ const passport = require('passport');
 const PinterestStrategy = require('passport-pinterest-v3').Strategy;
 const session = require('express-session');
 
-const SCOPES = ['boards:read', 'pins:write'];
+const SCOPES = ['boards:read', 'boards:write', 'pins:read', 'pins:write'];
 
 const EXIT_ON_SUCCESS = true;
 
