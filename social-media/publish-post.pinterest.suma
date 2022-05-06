@@ -4,7 +4,7 @@ provider = "pinterest"
 // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
 map PublishPost {
   return map error if (!Array.isArray(input.media) || input.media.length !== 1) {
-    title = "Missing image attachment"
+    title = "Invalid media"
     detail = "You must provide exactly one media item for Pinterest."
   }
 
@@ -63,7 +63,7 @@ map PublishPost {
     response 201 "application/json" {
       map result {
         postId =  body.id,
-        url = body.link,
+        url = `https://www.pinterest.com/pin/${body.id}/`,
       }
     }
 
@@ -93,7 +93,7 @@ map PublishPost {
 
     response 404 "application/json" {
       map error {
-        title = "Forbidden"
+        title = "Not found"
         detail = body.message
         original = body
       }
