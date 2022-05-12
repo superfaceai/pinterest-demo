@@ -1,5 +1,11 @@
 # Pinterest Demo
 
+This is a bare-bones demo of Superface integrations with Pinterest:
+
+- [oauth2/refresh-token](https://superface.ai/oauth2/refresh-token)
+- [social-media/publishing-profiles](https://superface.ai/social-media/publishing-profiles)
+- [social-media/publish-post](https://superface.ai/social-media/publish-post)
+
 ## Setup
 
 1. `npm i`
